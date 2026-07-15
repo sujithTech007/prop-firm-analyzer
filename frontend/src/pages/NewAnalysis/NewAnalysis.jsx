@@ -104,7 +104,7 @@ export default function NewAnalysis() {
     try {
       const data = await analyzeReadiness(file, rules);
       toast.success("Analysis complete!");
-      navigate(`/results/${data.id}`);
+      navigate(`/dashboard/results/${data.id}`);
     } catch (err) {
       setError(err.message || 'An error occurred during evaluation.');
       toast.error("Analysis failed.");

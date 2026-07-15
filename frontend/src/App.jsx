@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
+import Landing from './pages/Landing';
 import Overview from './pages/Overview';
 import History from './pages/History';
 import Insights from './pages/Insights';
@@ -24,7 +25,8 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Layout />}>
+        <Route path="/" element={<Landing />} />
+        <Route path="/dashboard" element={<Layout />}>
           <Route index element={<Overview />} />
           <Route path="new" element={<NewAnalysis />} />
           <Route path="history" element={<History />} />
@@ -32,8 +34,8 @@ export default function App() {
           <Route path="academy" element={<Academy />} />
           <Route path="settings" element={<Settings />} />
           <Route path="results/:id" element={<Results />} />
-          <Route path="*" element={<NotFound />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <ToastContainer position="bottom-right" theme="dark" />
     </Router>

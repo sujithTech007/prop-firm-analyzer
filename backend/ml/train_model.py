@@ -12,7 +12,7 @@ import shap
 import warnings
 warnings.filterwarnings("ignore")
 
-def generate_synthetic_data(n_samples: int = 5000) -> pd.DataFrame:
+def generate_synthetic_data(n_samples: int = 15000) -> pd.DataFrame:
     """
     Generates a realistic synthetic dataset representing historical trader stats.
     Expands to 15+ features correlated to 'passed' label.
@@ -101,8 +101,8 @@ def generate_synthetic_data(n_samples: int = 5000) -> pd.DataFrame:
     return data
 
 def train_and_evaluate():
-    print("Generating synthetic trader dataset with 5000 samples and 16 features...")
-    df = generate_synthetic_data(5000)
+    print("Generating synthetic trader dataset with 15000 samples and 16 features...")
+    df = generate_synthetic_data(15000)
     
     pass_count = df["passed"].sum()
     print(f"Dataset generated: {len(df)} samples ({pass_count} passed, {len(df) - pass_count} failed)")

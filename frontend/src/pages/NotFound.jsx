@@ -27,7 +27,7 @@ export default function NotFound() {
         </p>
       </div>
       <button
-        onClick={() => navigate('/')}
+        onClick={() => navigate('/dashboard')}
         style={{
           display: 'flex', alignItems: 'center', gap: '6px',
           backgroundColor: 'var(--accent-teal)', color: '#000',

@@ -346,7 +346,7 @@ export default function Results() {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <button
-            onClick={() => navigate('/history')}
+            onClick={() => navigate('/dashboard/history')}
             className="btn btn-secondary"
             style={{ padding: '8px 12px', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px' }}
           >

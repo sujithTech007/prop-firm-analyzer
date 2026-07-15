@@ -4,12 +4,12 @@ import { LayoutDashboard, PlusCircle, History, LineChart, Settings, BookOpen } f
 
 export default function Sidebar() {
   const navItems = [
-    { name: 'Overview', path: '/', icon: LayoutDashboard },
-    { name: 'New Analysis', path: '/new', icon: PlusCircle },
-    { name: 'History', path: '/history', icon: History },
-    { name: 'Insights', path: '/insights', icon: LineChart },
-    { name: 'Academy', path: '/academy', icon: BookOpen },
-    { name: 'Settings', path: '/settings', icon: Settings },
+    { name: 'Overview', path: '/dashboard', icon: LayoutDashboard },
+    { name: 'New Analysis', path: '/dashboard/new', icon: PlusCircle },
+    { name: 'History', path: '/dashboard/history', icon: History },
+    { name: 'Insights', path: '/dashboard/insights', icon: LineChart },
+    { name: 'Academy', path: '/dashboard/academy', icon: BookOpen },
+    { name: 'Settings', path: '/dashboard/settings', icon: Settings },
   ];
 
   return (

@@ -41,7 +41,7 @@ export default function History() {
             <h3 style={{ fontSize: '18px', fontWeight: 500, margin: '0 0 8px 0', color: 'var(--text-primary)' }}>No History Found</h3>
             <p style={{ margin: '0 0 24px 0' }}>You haven't run any analyses on this device yet.</p>
             <button 
-              onClick={() => navigate('/new')}
+              onClick={() => navigate('/dashboard/new')}
               style={{
                 backgroundColor: 'var(--brand-color)', color: '#000', border: 'none',
                 padding: '10px 20px', borderRadius: '6px', fontWeight: 600, cursor: 'pointer'
@@ -63,7 +63,7 @@ export default function History() {
             <tbody>
               {history.map(run => (
                 <tr key={run.id} 
-                    onClick={() => navigate(`/results/${run.id}`)}
+                    onClick={() => navigate(`/dashboard/results/${run.id}`)}
                     style={{ borderBottom: '1px solid var(--panel-border)', cursor: 'pointer', transition: 'background-color 0.2s' }}
                     className="hover-row"
                 >
