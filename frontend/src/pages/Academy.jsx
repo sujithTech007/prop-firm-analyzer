@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BookOpen, HelpCircle, AlertTriangle, ShieldCheck, TrendingUp, Info } from 'lucide-react';
 
 export default function Academy() {
   const [activeTab, setActiveTab] = useState('glossary');
+
+  useEffect(() => {
+    document.title = "Trader Academy & Glossary | Prop Firm Analyzer";
+  }, []);
 
   const glossaryItems = [
     {

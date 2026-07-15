@@ -9,6 +9,7 @@ export default function Overview() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    document.title = "Overview Dashboard | Prop Firm Analyzer";
     async function loadData() {
       try {
         const histData = await getHistory();
@@ -104,6 +105,71 @@ export default function Overview() {
             </tbody>
           </table>
         )}
+      </div>
+
+      <div className="panel" style={{ marginTop: '32px', padding: '24px' }}>
+        <h2 style={{ fontSize: '18px', fontWeight: 600, margin: '0 0 8px 0' }}>How It Works</h2>
+        <p style={{ color: 'var(--text-secondary)', margin: '0 0 24px 0', fontSize: '14px' }}>
+          Follow these simple steps to evaluate your challenge statistics using our machine learning scoring.
+        </p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ 
+                width: '24px', height: '24px', borderRadius: '50%', backgroundColor: 'rgba(74, 219, 186, 0.1)', 
+                color: 'var(--accent-teal)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '12px', fontWeight: 'bold' 
+              }}>1</span>
+              <h3 style={{ fontSize: '14px', fontWeight: 600, margin: 0, color: '#fff' }}>Load Trades</h3>
+            </div>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '12.5px', margin: 0, lineHeight: '1.5' }}>
+              Upload your MT4/MT5 CSV reports, or enter trades manually using our spreadsheet grid.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ 
+                width: '24px', height: '24px', borderRadius: '50%', backgroundColor: 'rgba(74, 219, 186, 0.1)', 
+                color: 'var(--accent-teal)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '12px', fontWeight: 'bold' 
+              }}>2</span>
+              <h3 style={{ fontSize: '14px', fontWeight: 600, margin: 0, color: '#fff' }}>Configure Rules</h3>
+            </div>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '12.5px', margin: 0, lineHeight: '1.5' }}>
+              Select target rules from well-known presets (FTMO, Topstep, MyFundedFX, The5ers) or customize your own limits.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ 
+                width: '24px', height: '24px', borderRadius: '50%', backgroundColor: 'rgba(74, 219, 186, 0.1)', 
+                color: 'var(--accent-teal)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '12px', fontWeight: 'bold' 
+              }}>3</span>
+              <h3 style={{ fontSize: '14px', fontWeight: 600, margin: 0, color: '#fff' }}>Audit & Diagnose</h3>
+            </div>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '12.5px', margin: 0, lineHeight: '1.5' }}>
+              Our rules engine audits daily loss, drawdown, target, consistency limits, and psychological traits.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ 
+                width: '24px', height: '24px', borderRadius: '50%', backgroundColor: 'rgba(74, 219, 186, 0.1)', 
+                color: 'var(--accent-teal)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '12px', fontWeight: 'bold' 
+              }}>4</span>
+              <h3 style={{ fontSize: '14px', fontWeight: 600, margin: 0, color: '#fff' }}>Optimize Sizing</h3>
+            </div>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '12.5px', margin: 0, lineHeight: '1.5' }}>
+              Use the position calculator to size contract sizes and simulate improvements on score sliders.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

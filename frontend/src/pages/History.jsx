@@ -9,6 +9,7 @@ export default function History() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    document.title = "Analysis History | Prop Firm Analyzer";
     async function fetchHistory() {
       try {
         const data = await getHistory();

@@ -388,3 +388,13 @@ def get_insights(x_session_id: str = Header(...), db: Session = Depends(get_db))
         common_breaches=common_breaches,
         feature_trends=feature_trends
     )
+
+@router.post("/history/clear")
+def clear_history(x_session_id: str = Header(...), db: Session = Depends(get_db)):
+    try:
+        db.query(AnalysisRecord).filter(AnalysisRecord.session_id == x_session_id).delete()
+        db.commit()
+        return {"message": "Session history cleared successfully."}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to clear history: {str(e)}")

@@ -45,6 +45,7 @@ export default function Results() {
   const [calcRiskPct, setCalcRiskPct] = useState(10); // 10% of remaining budget
 
   useEffect(() => {
+    document.title = `Evaluation Report #${id.substring(0, 8)} | Prop Firm Analyzer`;
     async function loadData() {
       try {
         const res = await getAnalysis(id);

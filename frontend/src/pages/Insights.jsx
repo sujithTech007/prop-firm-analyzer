@@ -7,6 +7,7 @@ export default function Insights() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    document.title = "Performance Insights | Prop Firm Analyzer";
     async function loadInsights() {
       try {
         const res = await getInsights();

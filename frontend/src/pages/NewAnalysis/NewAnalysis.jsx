@@ -37,6 +37,7 @@ export default function NewAnalysis() {
   ]);
 
   useEffect(() => {
+    document.title = "New Challenge Evaluation | Prop Firm Analyzer";
     async function loadPresets() {
       try {
         const fetched = await getFirmPresets();

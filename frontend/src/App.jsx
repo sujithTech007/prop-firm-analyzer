@@ -7,6 +7,8 @@ import Insights from './pages/Insights';
 import NewAnalysis from './pages/NewAnalysis/NewAnalysis';
 import Results from './pages/Results';
 import Academy from './pages/Academy';
+import Settings from './pages/Settings';
+import NotFound from './pages/NotFound';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -28,7 +30,9 @@ export default function App() {
           <Route path="history" element={<History />} />
           <Route path="insights" element={<Insights />} />
           <Route path="academy" element={<Academy />} />
+          <Route path="settings" element={<Settings />} />
           <Route path="results/:id" element={<Results />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
       <ToastContainer position="bottom-right" theme="dark" />
