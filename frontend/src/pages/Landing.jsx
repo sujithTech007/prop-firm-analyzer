@@ -176,14 +176,21 @@ export default function Landing() {
           <button onClick={() => scrollToSection('faqs')} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '14px', fontWeight: 500, transition: 'color 0.2s' }} className="hover-white-nav">FAQs</button>
         </nav>
 
-        {/* Custom CSS overrides for hover nav */}
-        <style dangerouslySetInnerHTML={{__html: `.hover-white-nav:hover { color: #fff !important; }`}} />
+        {/* Custom CSS overrides for hover nav and mobile buttons */}
+        <style dangerouslySetInnerHTML={{__html: `
+          .hover-white-nav:hover { color: #fff !important; }
+          @media (max-width: 575px) {
+            .hide-mobile-btn {
+              display: none !important;
+            }
+          }
+        `}} />
 
         {/* Nav right CTA buttons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <button 
             onClick={() => navigate('/dashboard')}
-            className="btn btn-secondary"
+            className="btn btn-secondary hide-mobile-btn"
             style={{ padding: '8px 16px', fontSize: '12px', textTransform: 'none', border: '1px solid var(--panel-border)' }}
           >
             Sign In
