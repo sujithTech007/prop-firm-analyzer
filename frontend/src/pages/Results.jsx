@@ -565,6 +565,69 @@ export default function Results() {
             </div>
           </div>
 
+          {/* AI Behavioral Risk Coach Critique Panel */}
+          <div className="panel" style={{ 
+            padding: '24px', 
+            position: 'relative',
+            background: 'linear-gradient(135deg, rgba(22, 28, 34, 0.9) 0%, rgba(22, 28, 34, 0.7) 100%)',
+            border: '1px solid rgba(232, 163, 61, 0.15)',
+            boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.4)'
+          }}>
+            {/* Glowing Amber Accent in top-right */}
+            <div style={{
+              position: 'absolute', top: 0, right: 0, width: '60px', height: '1px',
+              background: 'linear-gradient(90deg, transparent, var(--brand-color), transparent)'
+            }} />
+            
+            <h3 style={{ 
+              fontSize: '13px', 
+              fontWeight: 700, 
+              letterSpacing: '0.08em', 
+              color: 'var(--brand-color)', 
+              marginBottom: '16px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '8px' 
+            }} className="mono">
+              <Zap size={14} color="var(--brand-color)" /> AI RISK COACH CRITIQUE
+            </h3>
+
+            <div>
+              {data && data.ai_coaching ? (
+                data.ai_coaching.split('\n\n').map((para, idx) => (
+                  <p key={idx} style={{ 
+                    fontSize: '13.5px', 
+                    lineHeight: '1.6', 
+                    color: 'var(--text-secondary)', 
+                    margin: idx !== data.ai_coaching.split('\n\n').length - 1 ? '0 0 16px 0' : 0 
+                  }}>
+                    {para}
+                  </p>
+                ))
+              ) : (
+                <p style={{ color: 'var(--text-muted)', fontSize: '13px', margin: 0 }} className="mono">
+                  ● Running AI cognitive behavioral analysis...
+                </p>
+              )}
+            </div>
+            
+            <div style={{ 
+              marginTop: '20px', 
+              paddingTop: '12px', 
+              borderTop: '1px solid var(--panel-border)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <span style={{ fontSize: '11px', color: 'var(--text-muted)' }} className="mono">
+                MODEL: GEMINI-1.5-FLASH-BEHAVIORAL
+              </span>
+              <span className="mono" style={{ fontSize: '10px', color: 'var(--pass-color)', backgroundColor: 'rgba(74, 219, 186, 0.08)', padding: '2px 8px', borderRadius: '4px' }}>
+                AUDITED FEEDBACK
+              </span>
+            </div>
+          </div>
+
         </div>
 
         {/* Right Sidebar Details Column */}

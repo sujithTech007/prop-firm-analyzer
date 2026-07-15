@@ -10,3 +10,4 @@ shap
 sqlalchemy
 pytest
 httpx
+google-generativeai

@@ -74,6 +74,7 @@ class AnalysisResponse(BaseModel):
     feature_contributions: List[FeatureContribution] = []
     psychology: Optional[PsychologicalProfile] = None
     model_badge: Optional[ModelBadge] = None
+    ai_coaching: Optional[str] = None
     created_at: Optional[str] = None
 
 class FirmPreset(BaseModel):

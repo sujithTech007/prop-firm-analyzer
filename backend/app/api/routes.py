@@ -154,7 +154,14 @@ async def analyze_trades(
         print(f"Failed to load model badge: {e}")
 
     from app.services.readiness_scorer import generate_psychological_profile
+    from app.services.llm_coach import generate_ai_coaching
+    
     psychology_profile = generate_psychological_profile(stats)
+    
+    # Generate AI behavioral critique feedback
+    stats_dict = stats.model_dump()
+    rules_dict = [r.model_dump() for r in checklist]
+    ai_coaching_text = generate_ai_coaching(stats_dict, rules_dict)
 
     response = AnalysisResponse(
         id=analysis_id,
@@ -168,7 +175,8 @@ async def analyze_trades(
         recommendations=recs,
         feature_contributions=contributions,
         psychology=psychology_profile,
-        model_badge=model_badge
+        model_badge=model_badge,
+        ai_coaching=ai_coaching_text
     )
     
     # Save to database
