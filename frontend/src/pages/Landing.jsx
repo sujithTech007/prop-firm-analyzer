@@ -211,7 +211,7 @@ export default function Landing() {
         {/* 3. HERO SECTION (Asymmetric 2-Column) */}
         <section style={{
           position: 'relative',
-          padding: '80px 24px 100px 24px',
+          padding: '100px 24px 120px 24px',
           maxWidth: '1200px',
           margin: '0 auto',
           borderBottom: '1px solid var(--panel-border)'
@@ -238,7 +238,7 @@ export default function Landing() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, cubicBezier: [0.16, 1, 0.3, 1] }}
-              style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}
+              style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}
             >
               <div style={{ display: 'inline-flex' }}>
                 <span className="mono" style={{ 
@@ -257,25 +257,25 @@ export default function Landing() {
               </div>
 
               <h1 style={{ 
-                fontSize: 'clamp(36px, 5.5vw, 62px)', 
+                fontSize: 'clamp(40px, 6.2vw, 76px)', 
                 fontWeight: 800, 
-                lineHeight: 1.05,
-                letterSpacing: '-1.5px', 
+                lineHeight: 1.0,
+                letterSpacing: '-2.5px', 
                 fontFamily: "'Space Grotesk', sans-serif",
                 color: '#fff'
               }}>
-                AUDIT YOUR EDGE.<br/>
+                Turn your trading edge<br/>
                 <span style={{ 
                   background: 'linear-gradient(90deg, var(--brand-color), #FFC061)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent'
                 }}>
-                  PASS THE CHALLENGE.
+                  into funded accounts.
                 </span>
               </h1>
 
-              <p style={{ color: 'var(--text-secondary)', fontSize: '17px', lineHeight: 1.6, maxWidth: '580px' }}>
-                Audit your trade statements before purchasing an evaluation. Detect drawdowns, confirm profit consistency limits, and verify pass probability against prop firm rules using machine learning.
+              <p style={{ color: 'var(--text-secondary)', fontSize: 'clamp(16px, 1.8vw, 20px)', lineHeight: 1.6, maxWidth: '600px' }}>
+                Analyze your trade logs, audit risk boundaries, and predict challenge pass probability with calibrated machine learning before you pay for an evaluation.
               </p>
 
               <div style={{ 
@@ -287,7 +287,7 @@ export default function Landing() {
                 borderLeft: '2px solid var(--panel-border)',
                 paddingLeft: '12px'
               }}>
-                <span>Calibrated for evaluations similar to FTMO, FundingPips, and Topstep.</span>
+                <span>Built for traders preparing for evaluations on FTMO, FundingPips, and Topstep.</span>
               </div>
 
               <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginTop: '8px' }}>
