@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prop Firm Challenge Readiness Analyzer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0E1317;
+            --panel-bg: #161C22;
+            --panel-border: #2A343C;
+            --brand-color: #E8A33D;
+            --pass-color: #3FC1A0;
+            --warning-color: #ECC94B;
+            --breach-color: #E5595E;
+            --text-primary: #FFFFFF;
+            --text-secondary: #8E9A9F;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                linear-gradient(rgba(42, 52, 60, 0.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(42, 52, 60, 0.07) 1px, transparent 1px);
+            background-size: 48px 48px;
+            color: var(--text-primary);
+            font-family: 'Space Grotesk', sans-serif;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .logo-mark {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--brand-color);
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        @media (min-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 10px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--brand-color);
+        }
+
+        .panel.features::before {
+            background-color: var(--pass-color);
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            margin-bottom: 15px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--brand-color);
+            font-weight: bold;
+        }
+
+        .panel.features li::before {
+            color: var(--pass-color);
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--brand-color);
+            color: #0E1317;
+            text-decoration: none;
+            padding: 12px 28px;
+            border-radius: 5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(232, 163, 61, 0.4);
+        }
+
+        .tech-badge {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: rgba(42, 52, 60, 0.4);
+            border: 1px solid var(--panel-border);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--panel-border);
+            padding-top: 30px;
+            margin-top: 60px;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-mark">⚡ READINESS</div>
+            <h1>Prop Firm Challenge Readiness Analyzer</h1>
+            <p class="subtitle">AI-powered evaluation matching rules against historical performance data</p>
+        </header>
+
+        <main>
+            <div class="grid">
+                <div class="panel">
+                    <h2>How It Works</h2>
+                    <p style="margin-bottom: 15px; color: var(--text-secondary);">
+                        Prop firms impose strict limits on daily drawdown, overall loss, and trading activity. 
+                        This application acts as a sandbox, scanning your trade logs (CSV) for subtle warning signs before you invest in an evaluation.
+                    </p>
+                    <ul>
+                        <li><strong>Normalized Parsing:</strong> Seamlessly imports raw CSV logs from MT4, MT5, or cTrader.</li>
+                        <li><strong>Hard Rule Evaluator:</strong> Identifies potential breach triggers on daily loss and maximum drawdown.</li>
+                        <li><strong>Machine Learning Scoring:</strong> Predicts passing probability using a classification model trained on disciplined trader statistics.</li>
+                    </ul>
+                </div>
+
+                <div class="panel features">
+                    <h2>Key Features</h2>
+                    <ul>
+                        <li><strong style="color: var(--pass-color);">Behavioral Analysis:</strong> Flags overtrading (&gt;8 trades/day) and revenge trading (oversized sizing after losses).</li>
+                        <li><strong style="color: var(--pass-color);">Equity Visualization:</strong> Renders your cumulative P&amp;L curve chronologically.</li>
+                        <li><strong style="color: var(--pass-color);">Presets Engine:</strong> Loaded with standard 2-step (FTMO-style) and aggressive 1-step (Topstep-style) presets.</li>
+                    </ul>
+                    <div style="margin-top: 25px;">
+                        <span class="tech-badge">React</span>
+                        <span class="tech-badge">FastAPI</span>
+                        <span class="tech-badge">Pandas</span>
+                        <span class="tech-badge">Scikit-Learn</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="https://github.com" class="btn">View Source Code</a>
+            </div>
+        </main>
+
+        <footer>
+            <p>Prop Firm Challenge Readiness Analyzer &copy; 2026. Made with ❤️ for disciplined traders.</p>
+        </footer>
+    </div>
+</body>
+</html>
