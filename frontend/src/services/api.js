@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://prop-firm-analyzer.onrender.com';
 
 function getSessionId() {
   return localStorage.getItem('analyzer_session_id') || '';
