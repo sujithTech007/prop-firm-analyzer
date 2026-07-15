@@ -369,43 +369,113 @@ export default function Landing() {
                   </span>
                 </div>
 
-                {/* Score Circular Dial & Verdict Row */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '30px', marginBottom: '28px', flexWrap: 'wrap' }}>
-                  <div style={{ position: 'relative', width: '110px', height: '110px', flexShrink: 0, margin: '0 auto' }}>
-                    <svg width="100%" height="100%" viewBox="0 0 110 110" style={{ transform: 'rotate(-90deg)' }}>
-                      <circle cx="55" cy="55" r={radius} fill="transparent" stroke="rgba(42, 52, 60, 0.4)" strokeWidth="7" />
-                      <circle 
-                        cx="55" 
-                        cy="55" 
-                        r={radius} 
-                        fill="transparent" 
-                        stroke={scoreColor} 
-                        strokeWidth="7"
-                        strokeDasharray={circumference}
-                        strokeDashoffset={strokeDashoffset}
-                        strokeLinecap="round"
-                        style={{ transition: 'stroke-dashoffset 0.3s ease, stroke 0.3s ease' }}
-                      />
-                    </svg>
-                    <div style={{ 
-                      position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
-                    }}>
-                      <span className="mono" style={{ fontSize: '26px', fontWeight: 800, color: '#fff' }}>{readinessScore}</span>
-                      <span style={{ fontSize: '9px', color: 'var(--text-secondary)', letterSpacing: '0.5px' }}>SCORE</span>
-                    </div>
-                  </div>
+                {/* Oversized Glowing SVG HUD Visual Anchor */}
+                <div style={{ position: 'relative', width: '100%', height: '220px', marginBottom: '16px', overflow: 'hidden', borderRadius: '6px' }}>
+                  <svg width="100%" height="100%" viewBox="0 0 360 220" style={{ overflow: 'visible' }}>
+                    <defs>
+                      <filter id="glow-amber" x="-20%" y="-20%" width="140%" height="140%">
+                        <feGaussianBlur stdDeviation="5" result="blur" />
+                        <feMerge>
+                          <feMergeNode in="blur" />
+                          <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                      </filter>
+                      <filter id="glow-teal" x="-20%" y="-20%" width="140%" height="140%">
+                        <feGaussianBlur stdDeviation="6" result="blur" />
+                        <feMerge>
+                          <feMergeNode in="blur" />
+                          <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                      </filter>
+                      <linearGradient id="grad-teal" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#3FC1A0" />
+                        <stop offset="100%" stopColor="#4ADBB8" />
+                      </linearGradient>
+                      <linearGradient id="grad-amber" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#E8A33D" />
+                        <stop offset="100%" stopColor="#ECC94B" />
+                      </linearGradient>
+                    </defs>
 
-                  <div style={{ flex: 1, minWidth: '180px' }}>
+                    {/* Faint Background Grid Lines */}
+                    <g opacity="0.08">
+                      <line x1="0" y1="40" x2="360" y2="40" stroke="#fff" strokeWidth="1" />
+                      <line x1="0" y1="95" x2="360" y2="95" stroke="#fff" strokeWidth="1" />
+                      <line x1="0" y1="150" x2="360" y2="150" stroke="#fff" strokeWidth="1" />
+                      <line x1="0" y1="205" x2="360" y2="205" stroke="#fff" strokeWidth="1" />
+                      <line x1="72" y1="0" x2="72" y2="220" stroke="#fff" strokeWidth="1" />
+                      <line x1="144" y1="0" x2="144" y2="220" stroke="#fff" strokeWidth="1" />
+                      <line x1="216" y1="0" x2="216" y2="220" stroke="#fff" strokeWidth="1" />
+                      <line x1="288" y1="0" x2="288" y2="220" stroke="#fff" strokeWidth="1" />
+                    </g>
+
+                    {/* Gauge Track Background */}
+                    <circle cx="180" cy="110" r="55" fill="transparent" stroke="rgba(42, 52, 60, 0.4)" strokeWidth="7" />
+
+                    {/* Animated Gauge Arc Fill */}
+                    <circle 
+                      cx="180" 
+                      cy="110" 
+                      r="55" 
+                      fill="transparent" 
+                      stroke="url(#grad-teal)" 
+                      strokeWidth="7"
+                      strokeLinecap="round"
+                      strokeDasharray={345.58}
+                      strokeDashoffset={345.58 - (345.58 * readinessScore / 100)}
+                      filter="url(#glow-teal)"
+                      style={{ 
+                        transition: 'stroke-dashoffset 0.4s ease',
+                        transform: 'rotate(-90deg)',
+                        transformOrigin: '180px 110px'
+                      }}
+                    />
+
+                    {/* Dramatic Equity Curve Bleeding Off Viewport */}
+                    <path 
+                      d="M -10 180 Q 90 200 150 130 T 260 70 T 385 10" 
+                      fill="none" 
+                      stroke="url(#grad-amber)" 
+                      strokeWidth="3.5" 
+                      filter="url(#glow-amber)" 
+                    />
+
+                    {/* Glowing Vertex Dots */}
+                    <circle cx="150" cy="130" r="4.5" fill="var(--brand-color)" filter="url(#glow-amber)" />
+                    <circle cx="260" cy="70" r="4.5" fill="var(--brand-color)" filter="url(#glow-amber)" />
+
+                    {/* Floating HUD Labels inside graph */}
+                    <text x="180" y="105" textAnchor="middle" fill="#fff" fontSize="30" fontWeight="800" className="mono" style={{ letterSpacing: '-1.5px' }}>
+                      {readinessScore}
+                    </text>
+                    <text x="180" y="125" textAnchor="middle" fill="var(--text-secondary)" fontSize="9" fontWeight="bold" letterSpacing="0.5">
+                      READINESS
+                    </text>
+
+                    <text x="238" y="145" fill="var(--pass-color)" fontSize="9" fontWeight="bold" className="mono" opacity="0.85">
+                      +12.4% PROFIT
+                    </text>
+                    <text x="32" y="80" fill="var(--breach-color)" fontSize="9" fontWeight="bold" className="mono" opacity="0.85">
+                      MAX DD: 3.2%
+                    </text>
+                  </svg>
+                </div>
+
+                {/* Score Verdict and Metrics Summary Row */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderTop: '1px solid var(--panel-border)', paddingTop: '16px' }}>
+                  <div>
                     <span className="mono" style={{ fontSize: '11px', color: scoreColor, fontWeight: 700, letterSpacing: '0.5px', display: 'block' }}>
                       ● {scoreVerdict}
                     </span>
-                    <h4 style={{ fontSize: '20px', fontWeight: 700, margin: '4px 0 4px 0', color: '#fff' }}>
+                    <h4 style={{ fontSize: '19px', fontWeight: 700, margin: '4px 0 0 0', color: '#fff' }}>
                       {passProb}% Pass Probability
                     </h4>
-                    <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: 0, lineHeight: '1.4' }}>
-                      Correlated against 16 core risk boundaries including consistency metric ceilings.
-                    </p>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <span style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block' }}>AUDIT VERDICT</span>
+                    <span className="mono" style={{ fontSize: '13px', color: scoreColor, fontWeight: 'bold' }}>
+                      {readinessScore >= 70 ? "COMPLIANT" : (readinessScore >= 45 ? "WARNING" : "BREACHED")}
+                    </span>
                   </div>
                 </div>
 
