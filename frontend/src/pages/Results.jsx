@@ -611,21 +611,7 @@ export default function Results() {
               )}
             </div>
             
-            <div style={{ 
-              marginTop: '20px', 
-              paddingTop: '12px', 
-              borderTop: '1px solid var(--panel-border)',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}>
-              <span style={{ fontSize: '11px', color: 'var(--text-muted)' }} className="mono">
-                MODEL: GEMINI-1.5-FLASH-BEHAVIORAL
-              </span>
-              <span className="mono" style={{ fontSize: '10px', color: 'var(--pass-color)', backgroundColor: 'rgba(74, 219, 186, 0.08)', padding: '2px 8px', borderRadius: '4px' }}>
-                AUDITED FEEDBACK
-              </span>
-            </div>
+
           </div>
 
         </div>
