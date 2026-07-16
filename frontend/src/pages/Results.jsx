@@ -458,7 +458,10 @@ export default function Results() {
                   strokeDasharray={2 * Math.PI * 50}
                   strokeDashoffset={strokeDashoffset}
                   strokeLinecap="round"
-                  style={{ transition: 'stroke-dashoffset 0.4s ease, stroke 0.4s ease' }}
+                  style={{ 
+                    transition: 'stroke-dashoffset 0.4s ease, stroke 0.4s ease',
+                    filter: `drop-shadow(0 0 5px ${activeColor})`
+                  }}
                 />
               </svg>
               <div style={{ 
@@ -788,21 +791,45 @@ export default function Results() {
             <h3 style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.05em', color: 'var(--text-secondary)', marginBottom: '14px' }}>
               RULES AUDIT RUN
             </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               {rule_checklist.map((rule, idx) => {
                 const isPass = rule.status === 'pass';
                 const isWarning = rule.status === 'warning';
                 
+                const parseVal = (str) => {
+                  if (!str) return 0;
+                  const cl = str.toString().replace(/[^0-9.-]/g, '');
+                  return parseFloat(cl) || 0;
+                };
+
+                const actualVal = parseVal(rule.actual_value);
+                const limitVal = parseVal(rule.limit_value);
+                
+                let barPercent = 0;
+                if (rule.rule_name.includes("Days")) {
+                  barPercent = limitVal > 0 ? Math.min(100, (actualVal / limitVal) * 100) : 0;
+                } else {
+                  barPercent = limitVal > 0 ? Math.min(100, (actualVal / limitVal) * 100) : 0;
+                }
+
+                const indicatorColor = isPass ? 'var(--pass-color)' : (isWarning ? 'var(--warning-color)' : 'var(--breach-color)');
+                const indicatorBg = isPass ? 'rgba(74, 219, 186, 0.06)' : (isWarning ? 'rgba(236, 201, 75, 0.06)' : 'rgba(229, 89, 94, 0.06)');
+
                 return (
                   <div key={idx} style={{ 
                     borderBottom: idx !== rule_checklist.length - 1 ? '1px solid var(--panel-border)' : 'none',
-                    paddingBottom: idx !== rule_checklist.length - 1 ? '12px' : '0'
+                    paddingBottom: idx !== rule_checklist.length - 1 ? '14px' : '0'
                   }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                       <span style={{ fontSize: '13px', fontWeight: 600, color: '#fff' }}>{rule.rule_name}</span>
                       <span className="mono" style={{ 
-                        fontSize: '11px', fontWeight: 700, 
-                        color: isPass ? 'var(--pass-color)' : (isWarning ? 'var(--warning-color)' : 'var(--breach-color)')
+                        fontSize: '9px', 
+                        fontWeight: 700, 
+                        color: indicatorColor,
+                        backgroundColor: indicatorBg,
+                        padding: '2px 8px',
+                        borderRadius: '4px',
+                        border: `1px solid ${indicatorColor}22`
                       }}>
                         {rule.status.toUpperCase()}
                       </span>
@@ -810,6 +837,26 @@ export default function Results() {
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-secondary)' }}>
                       <span>Limit: {rule.limit_value}</span>
                       <span>Actual: <strong className="mono" style={{ color: '#fff' }}>{rule.actual_value}</strong></span>
+                    </div>
+                    
+                    {/* Visual Progress utilization line */}
+                    <div style={{ 
+                      height: '6px', 
+                      width: '100%', 
+                      backgroundColor: 'rgba(255,255,255,0.03)', 
+                      borderRadius: '3px', 
+                      marginTop: '8px', 
+                      overflow: 'hidden',
+                      border: '1px solid rgba(255,255,255,0.02)'
+                    }}>
+                      <div style={{ 
+                        height: '100%', 
+                        width: `${barPercent}%`, 
+                        backgroundColor: indicatorColor,
+                        borderRadius: '3px',
+                        boxShadow: isPass ? `0 0 6px ${indicatorColor}33` : 'none',
+                        transition: 'width 0.5s ease-out'
+                      }} />
                     </div>
                   </div>
                 );

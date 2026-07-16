@@ -76,10 +76,25 @@ export default function NewAnalysis() {
           setError("Please add at least one trade in the manual spreadsheet.");
           return;
         }
+
+        // Validate manual trades data
+        const invalidTrade = manualTrades.find(t => {
+          const invalidTime = !t.close_time || !/^\d{4}-\d{2}-\d{2}/.test(t.close_time.trim());
+          const invalidSymbol = !t.symbol || t.symbol.trim() === "";
+          const invalidLots = isNaN(t.lot_size) || t.lot_size <= 0;
+          const invalidProfit = isNaN(t.profit);
+          return invalidTime || invalidSymbol || invalidLots || invalidProfit;
+        });
+
+        if (invalidTrade) {
+          setError("Spreadsheet contains invalid entries. Ensure all close dates match 'YYYY-MM-DD', symbols are filled, and lot sizes are positive.");
+          return;
+        }
+
         // Build CSV representation from manual entries
         const csvRows = [
           "close_time,symbol,direction,lot_size,profit",
-          ...manualTrades.map(t => `"${t.close_time}","${t.symbol}","${t.direction}",${t.lot_size},${t.profit}`)
+          ...manualTrades.map(t => `"${t.close_time.trim()}","${t.symbol.trim().toUpperCase()}","${t.direction}",${t.lot_size},${t.profit}`)
         ];
         const csvContent = csvRows.join("\n");
         const manualFile = new File([csvContent], "manual_entered_trades.csv", { type: "text/csv" });
@@ -175,17 +190,29 @@ export default function NewAnalysis() {
           { num: 3, label: 'Review' }
         ].map((s, i) => (
           <React.Fragment key={s.num}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', opacity: step >= s.num ? 1 : 0.4 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', opacity: step >= s.num ? 1 : 0.5 }}>
               <div style={{ 
-                width: '24px', height: '24px', borderRadius: '50%', 
-                backgroundColor: step >= s.num ? 'var(--accent-teal)' : 'var(--panel-border)',
-                color: step >= s.num ? '#000' : 'var(--text-secondary)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '12px', fontWeight: 'bold'
+                width: '24px', 
+                height: '24px', 
+                borderRadius: '50%', 
+                backgroundColor: step >= s.num ? 'var(--pass-color)' : 'var(--panel-border)',
+                color: step >= s.num ? '#0b0f13' : 'var(--text-secondary)',
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                fontSize: '12px', 
+                fontWeight: 'bold',
+                boxShadow: step === s.num ? '0 0 10px rgba(74, 219, 186, 0.4)' : 'none',
+                transition: 'all var(--transition-normal)'
               }}>
                 {step > s.num ? <CheckCircle2 size={14} /> : s.num}
               </div>
-              <span style={{ fontSize: '14px', fontWeight: step >= s.num ? 600 : 400 }}>{s.label}</span>
+              <span style={{ 
+                fontSize: '14px', 
+                fontWeight: step >= s.num ? 600 : 400,
+                color: step >= s.num ? '#fff' : 'var(--text-secondary)',
+                transition: 'color var(--transition-normal)'
+              }}>{s.label}</span>
             </div>
             {i < 2 && (
               <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--panel-border)', margin: '0 16px' }} />
@@ -273,6 +300,33 @@ export default function NewAnalysis() {
 function StepUpload({ file, setFile, error, setError, inputMethod, setInputMethod, manualTrades, setManualTrades }) {
   const [isDragActive, setIsDragActive] = useState(false);
 
+  const validateCSVHeaders = (selectedFile) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target.result;
+      const firstLine = text.split('\n')[0].trim().toLowerCase();
+      
+      // Support comma and semicolon split structures
+      const headers = firstLine.split(/[;,]/).map(h => h.trim().replace(/['"]/g, ''));
+      const required = ['close_time', 'symbol', 'direction', 'lot_size', 'profit'];
+      
+      const missing = required.filter(col => !headers.includes(col));
+      
+      if (missing.length > 0) {
+        setError(`Invalid CSV format. Missing required columns: ${missing.join(', ')}.`);
+        setFile(null);
+      } else {
+        setFile(selectedFile);
+        setError(null);
+      }
+    };
+    reader.onerror = () => {
+      setError('Failed to read CSV file.');
+      setFile(null);
+    };
+    reader.readAsText(selectedFile);
+  };
+
   const handleDrag = (e) => {
     e.preventDefault(); e.stopPropagation();
     if (e.type === 'dragenter' || e.type === 'dragover') setIsDragActive(true);
@@ -284,14 +338,24 @@ function StepUpload({ file, setFile, error, setError, inputMethod, setInputMetho
     setIsDragActive(false); setError(null);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const droppedFile = e.dataTransfer.files[0];
-      if (droppedFile.name.endsWith('.csv')) setFile(droppedFile);
-      else setError('Only CSV files are supported.');
+      if (droppedFile.name.endsWith('.csv')) {
+        validateCSVHeaders(droppedFile);
+      } else {
+        setError('Only CSV files are supported.');
+      }
     }
   };
 
   const handleFileChange = (e) => {
     setError(null);
-    if (e.target.files && e.target.files[0]) setFile(e.target.files[0]);
+    if (e.target.files && e.target.files[0]) {
+      const selectedFile = e.target.files[0];
+      if (selectedFile.name.endsWith('.csv')) {
+        validateCSVHeaders(selectedFile);
+      } else {
+        setError('Only CSV files are supported.');
+      }
+    }
   };
 
   const handleAddRow = () => {
@@ -518,27 +582,32 @@ function StepConfigure({ rules, setRules, presets, selectedPresetIndex, setSelec
         <div className="input-group">
           <label className="input-label">Account Balance ($)</label>
           <input type="number" className="input-field" value={rules.account_size} onChange={(e) => handleInputChange('account_size', e.target.value)} />
+          <span style={{ fontSize: '10.5px', color: 'var(--text-muted)', lineHeight: '1.3' }}>Standard evaluation sizes are $5,000 to $200,000.</span>
         </div>
         <div className="input-group">
           <label className="input-label">Max Daily Loss (%)</label>
           <input type="number" step="0.1" className="input-field" value={rules.max_daily_loss_pct} onChange={(e) => handleInputChange('max_daily_loss_pct', e.target.value)} />
+          <span style={{ fontSize: '10.5px', color: 'var(--text-muted)', lineHeight: '1.3' }}>Firms set this daily drawdown limit between 4% and 5%.</span>
         </div>
         <div className="input-group">
           <label className="input-label">Max Total Drawdown (%)</label>
           <input type="number" step="0.1" className="input-field" value={rules.max_total_drawdown_pct} onChange={(e) => handleInputChange('max_total_drawdown_pct', e.target.value)} />
+          <span style={{ fontSize: '10.5px', color: 'var(--text-muted)', lineHeight: '1.3' }}>Liquidates accounts hitting 8% to 12% total loss.</span>
         </div>
         <div className="input-group">
           <label className="input-label">Profit Target (%)</label>
           <input type="number" step="0.1" className="input-field" value={rules.profit_target_pct} onChange={(e) => handleInputChange('profit_target_pct', e.target.value)} />
+          <span style={{ fontSize: '10.5px', color: 'var(--text-muted)', lineHeight: '1.3' }}>Phase-1 targets typically range from 8% to 10%.</span>
         </div>
         <div className="input-group">
           <label className="input-label">Min Trading Days</label>
           <input type="number" className="input-field" value={rules.min_trading_days} onChange={(e) => handleInputChange('min_trading_days', e.target.value)} />
+          <span style={{ fontSize: '10.5px', color: 'var(--text-muted)', lineHeight: '1.3' }}>Minimum active days required (usually 4 to 10).</span>
         </div>
         <div className="input-group">
           <label className="input-label">Consistency Rule limit (%)</label>
           <input type="number" step="0.1" className="input-field" value={rules.consistency_rule_pct} onChange={(e) => handleInputChange('consistency_rule_pct', e.target.value)} />
-          <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>
+          <span style={{ fontSize: '10.5px', color: 'var(--text-muted)', lineHeight: '1.3' }}>
             Max share of profit on any single day (e.g. 40% for Topstep). Set to 0 to disable.
           </span>
         </div>
