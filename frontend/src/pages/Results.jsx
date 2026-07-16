@@ -7,7 +7,7 @@ import {
 import { getAnalysis, simulateScore } from '../services/api';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell, LineChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell, LineChart, Line, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
 import { toast } from 'react-toastify';
 
 export default function Results() {
@@ -233,6 +233,48 @@ export default function Results() {
     name: fc.feature.replace(/_/g, ' '),
     importance: parseFloat(fc.importance.toFixed(2))
   })).sort((a, b) => Math.abs(b.importance) - Math.abs(a.importance)).slice(0, 6);
+
+  // Calculate Radar Data
+  const calculateRadarData = (winRate, rr, overtrading, revenge, maxDd, consistency, totalTrades = 50) => {
+    const overtradingRatio = overtrading / 10;
+    const revengeRatio = revenge / Math.max(1, totalTrades);
+    
+    const ddScore = Math.max(10, 100 - (maxDd * 8));
+    const emotionScore = Math.max(10, 100 - (revengeRatio * 300));
+    const patienceScore = Math.max(10, 100 - (overtradingRatio * 200));
+    const consistencyScoreValue = Math.min(100, Math.max(10, consistency * 100));
+    
+    const estPf = (winRate / 100) * rr / Math.max(0.1, (1 - winRate/100));
+    const edgeScore = Math.min(100, Math.max(10, (winRate * 0.6) + (Math.min(estPf, 3) * 13.3)));
+    
+    return [
+      { subject: 'Drawdown Control', value: Math.round(ddScore), fullMark: 100 },
+      { subject: 'Emotional Discipline', value: Math.round(emotionScore), fullMark: 100 },
+      { subject: 'Patience & Timing', value: Math.round(patienceScore), fullMark: 100 },
+      { subject: 'Profit Consistency', value: Math.round(consistencyScoreValue), fullMark: 100 },
+      { subject: 'Execution Edge', value: Math.round(edgeScore), fullMark: 100 },
+    ];
+  };
+
+  const activeStats = simulatedScore !== null ? {
+    win_rate: simWinRate,
+    reward_to_risk: simRR,
+    overtrading_days: simOvertrading,
+    revenge_trades: simRevenge,
+    max_drawdown_pct: simDrawdown,
+    consistency_score: simConsistency,
+    total_trades: stats?.total_trades || 50
+  } : stats;
+
+  const radarData = activeStats ? calculateRadarData(
+    activeStats.win_rate,
+    activeStats.reward_to_risk,
+    activeStats.overtrading_days,
+    activeStats.revenge_trades,
+    activeStats.max_drawdown_pct,
+    activeStats.consistency_score,
+    activeStats.total_trades || 50
+  ) : [];
 
   // Prepare equity curve coordinates
   const equityData = trades.map((t, idx) => ({
@@ -504,6 +546,99 @@ export default function Results() {
                   <Line type="monotone" dataKey="pnl" stroke="var(--brand-color)" strokeWidth={2.5} dot={false} animationDuration={1000} />
                 </LineChart>
               </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Trader Behavioral DNA Radar Panel */}
+          <div className="panel" style={{ padding: '24px' }}>
+            <h3 style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.08em', color: 'var(--text-secondary)', marginBottom: '18px' }} className="mono">
+              TRADER BEHAVIORAL DNA RATING
+            </h3>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '24px', alignItems: 'center' }} className="dna-grid">
+              <style dangerouslySetInnerHTML={{__html: `
+                @media (min-width: 768px) {
+                  .dna-grid {
+                    grid-template-columns: 1.1fr 1fr !important;
+                  }
+                }
+              `}} />
+              
+              {/* Radar Chart Container */}
+              <div style={{ height: '240px', position: 'relative' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart cx="50%" cy="50%" outerRadius="75%" data={radarData}>
+                    <PolarGrid stroke="var(--panel-border)" />
+                    <PolarAngleAxis dataKey="subject" stroke="var(--text-muted)" fontSize={10} />
+                    <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="var(--panel-border)" fontSize={9} />
+                    <Radar 
+                      name="Behavioral Score" 
+                      dataKey="value" 
+                      stroke="var(--brand-color)" 
+                      fill="var(--brand-color)" 
+                      fillOpacity={0.2} 
+                      animationDuration={800}
+                    />
+                    <Tooltip contentStyle={{ backgroundColor: 'var(--panel-bg)', borderColor: 'var(--panel-border)', borderRadius: '8px' }} />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* Explanatory Ratings List */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {radarData.map((item, idx) => {
+                  let badgeColor = 'var(--pass-color)';
+                  let bg = 'rgba(74, 219, 186, 0.05)';
+                  let text = 'Excellent';
+                  
+                  if (item.value < 45) {
+                    badgeColor = 'var(--breach-color)';
+                    bg = 'rgba(229, 89, 94, 0.05)';
+                    text = 'Vulnerable';
+                  } else if (item.value < 75) {
+                    badgeColor = 'var(--warning-color)';
+                    bg = 'rgba(236, 201, 75, 0.05)';
+                    text = 'Moderate';
+                  }
+                  
+                  return (
+                    <div key={idx} style={{ 
+                      display: 'flex', 
+                      justifyContent: 'space-between', 
+                      alignItems: 'center',
+                      padding: '8px 12px',
+                      borderRadius: '6px',
+                      backgroundColor: 'rgba(255,255,255,0.01)',
+                      border: '1px solid var(--panel-border)'
+                    }}>
+                      <div>
+                        <div style={{ fontSize: '12px', fontWeight: 600, color: '#fff' }}>{item.subject}</div>
+                        <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                          {item.subject === 'Drawdown Control' && 'Capital preservation boundaries'}
+                          {item.subject === 'Emotional Discipline' && 'Control over revenge scaling'}
+                          {item.subject === 'Patience & Timing' && 'Restraint from overtrading'}
+                          {item.subject === 'Profit Consistency' && 'Stability of daily returns'}
+                          {item.subject === 'Execution Edge' && 'Win expectancy and sizing efficiency'}
+                        </div>
+                      </div>
+                      
+                      <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px' }}>
+                        <span className="mono" style={{ fontSize: '13px', fontWeight: 700, color: badgeColor }}>{item.value}%</span>
+                        <span style={{ 
+                          fontSize: '8px', 
+                          fontWeight: 'bold', 
+                          color: badgeColor, 
+                          backgroundColor: bg, 
+                          padding: '1px 6px', 
+                          borderRadius: '4px' 
+                        }} className="mono">
+                          {text.toUpperCase()}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
